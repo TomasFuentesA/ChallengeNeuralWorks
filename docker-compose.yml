@@ -1,0 +1,67 @@
+version: "3.9"
+
+networks:
+  challengeNW:
+
+services:
+  postgres:
+    networks:
+      - challengeNW 
+    build: ./db
+    restart: always
+    container_name: postgres     
+    ports:
+      - "5432:5432"
+    environment:
+      - bind-address=0.0.0.0
+      - POSTGRESQL_DATABASE=challengeNW
+      - ALLOW_EMPTY_PASSWORD=yes
+  
+  backend:
+    networks:
+      - challengeNW
+    build: ./problema1
+    command: tail -f /dev/null
+    depends_on:
+      - postgres
+
+  producer:
+    build: ./producer
+    networks:
+      - challengeNW
+    depends_on:
+      - kafka
+    command: tail -f /dev/null  
+
+  consumer:
+    build: ./consumer
+    networks:
+      - challengeNW
+    depends_on:
+      - kafka     
+    command: tail -f /dev/null   
+
+  zookeper:
+    networks:
+      - challengeNW
+    image: 'bitnami/zookeeper:latest'
+    container_name: zookeeper
+    ports:
+      - '2181:2181'
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+  
+  kafka:
+    networks:
+      - challengeNW
+    image: 'bitnami/kafka:latest'
+    container_name: kafka
+    ports:
+      - '9092:9092'
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+ 

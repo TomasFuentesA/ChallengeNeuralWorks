@@ -1,0 +1,1 @@
+CREATE TABLE Trips(id SERIAL PRIMARY KEY, region TEXT, latitude_origin DOUBLE PRECISION, longitude_origin DOUBLE PRECISION, latitude_destination DOUBLE PRECISION, longitude_destination DOUBLE PRECISION, datetime TIMESTAMP, datasource VARCHAR(100));
