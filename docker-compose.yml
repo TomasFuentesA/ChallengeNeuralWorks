@@ -33,7 +33,6 @@ services:
     depends_on:
       - postgres
 
-
   producer:
     build: ./producer
     networks:
