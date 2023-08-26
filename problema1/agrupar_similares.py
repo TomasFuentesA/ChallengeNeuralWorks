@@ -118,4 +118,7 @@ def viajes_parecidos():
     conn.commit()
     conn.close()
 
+    print(labels)
     return labels
+
+viajes_parecidos()
