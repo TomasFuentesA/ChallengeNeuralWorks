@@ -4,10 +4,10 @@ Challenge de NeuralWorks
 ## Tabla de contenidos
 
 - [Supuestos](#Supuestos)
-- [Ejecución](#ejecucion)
-- [Situaciones de Mejora](#Mejoras)
-- [Escalabilidad](#escalabilidad)
-- [Contributing](#contributing)
+- [Ejecución](#Ejecucion)
+- [Situaciones de Mejora](#Situaciones_de_Mejoras)
+- [Escalabilidad](#Escalabilidad)
+- [GCP](#GCP)
 - [License](#license)
 
 ## Supuestos
@@ -53,6 +53,17 @@ $ docker-compose down
 - Acompañado de esto, es importante añadir sistemas de recuperación en caso de cortes o interrupciones. Guardar checkpoints de manera periodica, permite mantener el sistema listo en caso de emergencia.
 - Por otro lado, como mejora podria ser la utilización de bases de datos no relacionales en conjunto de las relacionales, es posible mientras se reciba mucha data de distintos lugares alguna sea no estructurada por ende sería necesaria la utilizacion de un BD no estrucutral.
 - Usar otro tipo de herramientas distribuida como Spark por ejemplo, que nos ayudaria en el caso de agrupar grandes volumenes de datos con sus librerias de ML y además de otorgar escalibilidad, otorga eficiencia y rendimiento.
-
+## Escalabilidad
+- La escalabilidad esta presente en dos grandes protagonistas Kafka y Docker. Partiendo por kafka, al tener muchos datos, del orden de millones este nos permite replicar nuestros producers y consumers, para asi poder dar abasto a la cantidad de demanda del sistema. También es posible manejar clústers con múltiples nodos para mantener la redundancia y asi garantizar la no perdida de los datos y los distintos servicios sigan funcionando sin problemas.
+- Por otro lado el uso de contenedores, nos permite replicar servicios y no sobrecargar uno en especifico, de esta forma podemos mantener muchos contenedores identicos procesando datos sin sobrecargar alguno y en caso de que alguno falle, se utiliza algún balanceador de carga para poder repartir las tareas que deban finalizarse y que el contenedor que fallo no pueda realizar.
   
-
+## GCP
+- Para montar todo en GCP, considero que deben haber 4 puntos claves:
+- Kubernetes permitirá manejar clústers de herramientas distribuidas que podrán capturar la data en tiempo real que llegue al sistema.
+- Luego viene Dataflow, el cual nos permitirá preprocesar todas nuestra data para los estudios que sea necesarios.
+- BigQuery será nuestro almacen, alli guardaremos toda nuestra data preprocesada que será útil para alimentar modelos de ML o realizar análisis de estos datos.
+- Cloud Endpoints, nos permitira manejar nuestros servicios, los cuales realizaran consultas a BigQuery para obtener los datos necesarios según su funcionalidad.
+  
+<p align="center">
+  <img src="https://github.com/TomasFuentesA/ChallengeNeuralWorks/assets/69986261/8c6b7e24-8f40-4af5-abe4-7acc2d8e84be" alt="DiagramaGCP">
+</p>
