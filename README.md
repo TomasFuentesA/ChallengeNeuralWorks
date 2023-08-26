@@ -14,7 +14,7 @@ Challenge de NeuralWorks
 - En primer lugar, el CSV otorgado fue considerado como una fuente de stream de datos, la idea era poder emular un "caso real" en donde los datos llegan en tiempo real.
 - Segundo, las respuestas a los problemas se consideraron como funcionas que retornan los solicitado. Se toma este metodo pensando en la idea de que son servicios que se pueden requerir en cualquier momento.
 - Tercero, la creación del "topic" de kafka se hace de manera manual en la consola de docker y con el nombre "test", debido a que es un entorno de pruebas de este caso.
-- El dato POINT, se guardan por separa en BD para hacer más fácil su manejo.
+- El dato POINT, se guardan por separado en la BD para hacer más fácil su manejo.
 
 ## Ejecución
 - Primero, para ejecutar la solución se deben correr los siguientes comandos:
@@ -57,6 +57,7 @@ $ docker-compose down
 ## Escalabilidad
 - La escalabilidad esta presente en dos grandes protagonistas Kafka y Docker. Partiendo por kafka, al tener muchos datos, del orden de millones este nos permite replicar nuestros producers y consumers, para asi poder dar abasto a la cantidad de demanda del sistema. También es posible manejar clústers con múltiples nodos para mantener la redundancia y asi garantizar la no perdida de los datos y los distintos servicios sigan funcionando sin problemas.
 - Por otro lado el uso de contenedores, nos permite replicar servicios y no sobrecargar uno en especifico, de esta forma podemos mantener muchos contenedores identicos procesando datos sin sobrecargar alguno y en caso de que alguno falle, se utiliza algún balanceador de carga para poder repartir las tareas que deban finalizarse y que el contenedor que fallo no pueda realizar.
+- Creo que la situación de mejora más notoria es automatizar todo (o la gran mayoria) y tratar de minimizar el añadir comandos manualmente.
   
 ## GCP
 - Para montar todo en GCP, considero que deben haber 4 puntos claves:
