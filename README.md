@@ -14,6 +14,7 @@ Challenge de NeuralWorks
 - En primer lugar, el CSV otorgado fue considerado como una fuente de stream de datos, la idea era poder emular un "caso real" en donde los datos llegan en tiempo real.
 - Segundo, las respuestas a los problemas se consideraron como funcionas que retornan los solicitado. Se toma este metodo pensando en la idea de que son servicios que se pueden requerir en cualquier momento.
 - Tercero, la creación del "topic" de kafka se hace de manera manual en la consola de docker y con el nombre "test", debido a que es un entorno de pruebas de este caso.
+- El dato POINT, se guardan por separa en BD para hacer más fácil su manejo.
 
 ## Ejecución
 - Primero, para ejecutar la solución se deben correr los siguientes comandos:
