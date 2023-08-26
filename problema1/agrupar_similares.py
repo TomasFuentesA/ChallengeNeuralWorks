@@ -19,6 +19,8 @@ def get_distance(lat_origin, long_origin, lat_destination, long_destination):
     :param long_destination: Longitud del punto de destino en grados.
 
     :return: Distancia en kilómetros entre los dos puntos.
+
+    :Función sacada de https://www.geeksforgeeks.org/program-distance-two-points-earth/
     """
     # Convierte las coordenadas de latitud y longitud de cadenas a números de punto flotante
     x = float(lat_origin)
