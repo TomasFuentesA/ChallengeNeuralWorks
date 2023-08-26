@@ -60,6 +60,4 @@ def get_weekly_average(region, lat_origin, long_origin, lat_destination, long_de
     # Calcula el promedio semanal dividiendo el conteo semanal por 7.
     promedio_semanal = conteo_semanal['region'] / 7
 
-    print(promedio_semanal)
-
     return promedio_semanal
