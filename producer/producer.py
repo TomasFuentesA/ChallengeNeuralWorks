@@ -10,8 +10,7 @@ df = pd.read_csv('trips.csv').sort_values(by='datetime')
 
 
 try:
-    print("OK")
-    # Itera a través de las filas y envía cada fila como un diccionario JSON
+    # Itera y envía cada fila como un diccionario JSON
     producer.send('test', value={'message': 'Ingesta de datos iniciada'})
     for _, row in df.iterrows():
           

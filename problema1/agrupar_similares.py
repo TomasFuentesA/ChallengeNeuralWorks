@@ -8,14 +8,6 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.cluster import KMeans
 
 
-#Conexión a la BD
-conn = db_resources.init_db()
-cursor = conn.cursor()
-
-cursor.execute("SELECT datetime, latitude_origin, longitude_origin, latitude_destination, longitude_destination FROM trips;")
-
-data = cursor.fetchall()
-
 def get_distance(lat_origin, long_origin, lat_destination, long_destination):
     """
     Calcula la distancia en kilómetros entre dos puntos entre
@@ -76,24 +68,52 @@ def normalize_data(dataframe):
     dataframe['distance'] = MinMaxScaler().fit_transform(dataframe[['distance']])
 
     return dataframe
-    
 
-init_df = {
+def viajes_parecidos():
+    """
+    Esta función realiza la agrupación de viajes similares en función de las coordenadas y la fecha y hora de los viajes
+    en la base de datos. Utiliza el algoritmo K-Means para agrupar los viajes en clústeres y actualiza la columna
+    'CLUSTER' en la tabla 'Trips' con las etiquetas de clúster correspondientes.
+
+    Returns:
+        labels (list): Una lista de etiquetas que indican a qué clúster pertenece cada viaje.
+    """
+    # Conexión a la BD
+    conn = db_resources.init_db()
+    cursor = conn.cursor()
+
+    # Consulta para obtener los datos necesarios
+    cursor.execute("SELECT datetime, latitude_origin, longitude_origin, latitude_destination, longitude_destination FROM trips;")
+    data = cursor.fetchall()
+
+    # Creación del DataFrame inicial
+    init_df = {
         'timestamp_sec': [],
-        'distance' : []
+        'distance': []
     }
 
-for row in data:
-    date, latitude_origin, longitude_origin, latitude_destination, longitude_destination = row
-    init_df['timestamp_sec'].append(timestamp_to_sec(date))
-    init_df['distance'].append(get_distance(latitude_origin, longitude_origin, latitude_destination, longitude_destination))
+    for row in data:
+        date, latitude_origin, longitude_origin, latitude_destination, longitude_destination = row
+        init_df['timestamp_sec'].append(timestamp_to_sec(date))
+        init_df['distance'].append(get_distance(latitude_origin, longitude_origin, latitude_destination, longitude_destination))
 
-df = pd.DataFrame(init_df)
+    df = pd.DataFrame(init_df)
 
-normalized_df = normalize_data(df)
+    # Normalización de los datos
+    normalized_df = normalize_data(df)
+    X = normalized_df.to_numpy()
 
-X = normalized_df.to_numpy()
+    # Aplicación del algoritmo K-Means
+    kmeans = KMeans(n_clusters=4, random_state=0, n_init="auto")
+    labels = kmeans.fit_predict(X)
 
-kmeans = KMeans(n_clusters=4, random_state=0, n_init="auto")
-labels = kmeans.fit_predict(X)
-print(labels)
+    # Actualización de la columna 'CLUSTER' en la tabla 'Trips'
+    for i, label in enumerate(labels):
+        query = f"UPDATE Trips SET CLUSTER = {label} WHERE id = {i + 1};"
+        cursor.execute(query)
+
+    # Confirmar y cerrar la conexión
+    conn.commit()
+    conn.close()
+
+    return labels

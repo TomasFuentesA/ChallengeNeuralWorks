@@ -1,9 +1,5 @@
 import db_resources
 
-#Conexión a la BD
-conn = db_resources.init_db()
-cursor = conn.cursor()
-
 def get_weekly_mean(cursor, region, lat_origin, long_origin, lat_destination, long_destination):
     """
     Calcula el promedio semanal de viajes en una región dentro de un rango geográfico.
@@ -20,10 +16,20 @@ def get_weekly_mean(cursor, region, lat_origin, long_origin, lat_destination, lo
     pd.Series: Una serie de Pandas que contiene el promedio semanal de viajes.
     """
 
+    #Conexión a la BD
+    conn = db_resources.init_db()
+    cursor = conn.cursor()
+
     # Ejecuta la consulta SQL para obtener los datos de la región y rango geográfico.
     cursor.execute("""
-       SELECT region, datetime FROM trips 
-       WHERE region = %s AND latitude_origin >= %s AND longitude_origin >= %s AND latitude_destination <= %s AND longitude_destination <= %s;""",
+            SELECT region, datetime 
+            FROM trips 
+            WHERE region = %s 
+            AND latitude_origin >= %s 
+            AND longitude_origin >= %s 
+            AND latitude_destination <= %s 
+            AND longitude_destination <= %s;
+            """,
        (region, lat_origin, long_origin, lat_destination, long_destination))
 
     # Obtiene los datos de la consulta.
