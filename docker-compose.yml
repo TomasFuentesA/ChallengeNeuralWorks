@@ -17,13 +17,22 @@ services:
       - POSTGRESQL_DATABASE=challengeNW
       - ALLOW_EMPTY_PASSWORD=yes
   
-  backend:
+  problema1:
     networks:
       - challengeNW
     build: ./problema1
     command: tail -f /dev/null
     depends_on:
       - postgres
+
+  problema2:
+    networks:
+      - challengeNW
+    build: ./problema2
+    command: tail -f /dev/null
+    depends_on:
+      - postgres
+
 
   producer:
     build: ./producer

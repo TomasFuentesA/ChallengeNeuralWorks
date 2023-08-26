@@ -2,7 +2,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns; sns.set()  # for plot styling
 from math import radians, cos, sin, asin, sqrt
 from datetime import datetime
-import numpy as np
 import db_resources
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
